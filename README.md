@@ -1,31 +1,50 @@
 # Valutec
 
-This gem provides an interface to the Valutec Gift Card API, as [documented](https://ws.valutec.net/Valutec.asmx).
-
-
+This gem provides an interface to the Valutec Gift Card API, as [documented](https://ws.valutec.net/Valutec.asmx?WSDL).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+```ruby
+gem "valutec", git: "https://github.com/funcard/Valutec"
+```
 
-    gem 'valutec'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install valutec
+An XML implementation is required in your project to parse the Valutec API responses.
 
 ## Usage
 
-TODO: Write usage instructions here
+Low-level Client:
 
-## Contributing
+```ruby
+require 'valutec'
 
-1. Fork it ( https://github.com/etbd/valutec/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+client = Valutec::Api.new(
+    client_key: "", 
+    terminal_id: "", 
+    server_id: "",
+)
+
+response = client.card_balance({
+    "ProgramType" => "Gift",
+    "CardNumber" => "11111222222",
+})
+puts response.to_h
+```
+
+High-Level Client:
+
+```ruby
+require 'valutec'
+
+client = Valutec::HighLevelApi.new(
+    client_key: "", 
+    terminal_id: "", 
+    server_id: "",
+)
+
+begin
+    balance = client.card_balance("11111222222")
+    puts balance
+rescue => e
+    puts e
+end
+```
